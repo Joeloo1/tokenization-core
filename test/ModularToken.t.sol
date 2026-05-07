@@ -11,8 +11,8 @@ contract ModularTokenTest is Test {
     Compliance compliance;
     ModularToken token;
 
-    address alice = address(1);
-    address bob = address(2);
+    address alice = makeAddr("alice");
+    address bob = makeAddr("bob");
 
     function setUp() public {
         identity = new IdentityRegistry();
@@ -22,6 +22,7 @@ contract ModularTokenTest is Test {
 
     function testMintFailsIfNotVerified() public {
         vm.expectRevert();
+
         token.mint(alice, 100);
     }
 
@@ -34,32 +35,35 @@ contract ModularTokenTest is Test {
     }
 
     function testTransferFailsIfReceiverNotVerified() public {
-        identity.verify(address(this));
+        identity.verify(alice);
 
-        token.mint(address(this), 100);
+        token.mint(alice, 100);
 
+        vm.prank(alice);
         vm.expectRevert();
-        token.transfer(alice, 10);
+        token.transfer(bob, 10);
     }
 
     function testTransferWorksWhenBothVerified() public {
-        identity.verify(address(this));
         identity.verify(alice);
+        identity.verify(bob);
 
-        token.mint(address(this), 100);
+        token.mint(alice, 100);
 
-        token.transfer(alice, 10);
+        vm.prank(alice);
+        token.transfer(bob, 10);
 
-        assertEq(token.balanceOf(alice), 10);
+        assertEq(token.balanceOf(bob), 10);
     }
 
     function testTransferFailsIfAboveComplianceLimit() public {
-        identity.verify(address(this));
         identity.verify(alice);
+        identity.verify(bob);
 
-        token.mint(address(this), 2000);
+        token.mint(alice, 2000);
 
+        vm.prank(alice);
         vm.expectRevert();
-        token.transfer(alice, 1500);
+        token.transfer(bob, 1500);
     }
 }
