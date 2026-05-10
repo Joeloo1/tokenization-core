@@ -16,7 +16,7 @@ contract ModularTokenTest is Test {
 
     function setUp() public {
         identity = new IdentityRegistry();
-        compliance = new Compliance(1000);
+        compliance = new Compliance(1000, 0, address(identity));
         token = new ModularToken(address(identity), address(compliance));
     }
 
@@ -41,7 +41,7 @@ contract ModularTokenTest is Test {
 
         vm.prank(alice);
         vm.expectRevert();
-        token.transfer(bob, 10);
+        token.transfer(alice, bob, 10);
     }
 
     function testTransferWorksWhenBothVerified() public {
@@ -51,7 +51,7 @@ contract ModularTokenTest is Test {
         token.mint(alice, 100);
 
         vm.prank(alice);
-        token.transfer(bob, 10);
+        token.transfer(alice, bob, 10);
 
         assertEq(token.balanceOf(bob), 10);
     }
@@ -64,6 +64,6 @@ contract ModularTokenTest is Test {
 
         vm.prank(alice);
         vm.expectRevert();
-        token.transfer(bob, 1500);
+        token.transfer(alice, bob, 1500);
     }
 }

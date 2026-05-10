@@ -15,7 +15,7 @@ contract Deploy is Script {
         identity = new IdentityRegistry();
 
         // 2. Deploy Compliance (set max transfer limit)
-        compliance = new Compliance(1000);
+        compliance = new Compliance(1000, 0, address(identity));
 
         // 3. Deploy Token (connect both systems)
         token = new ModularToken(address(identity), address(compliance));
