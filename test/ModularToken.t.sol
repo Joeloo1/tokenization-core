@@ -41,7 +41,7 @@ contract ModularTokenTest is Test {
 
         vm.prank(alice);
         vm.expectRevert();
-        token.transfer(alice, bob, 10);
+        token.transfer(bob, 10);
     }
 
     function testTransferWorksWhenBothVerified() public {
@@ -51,7 +51,7 @@ contract ModularTokenTest is Test {
         token.mint(alice, 100);
 
         vm.prank(alice);
-        token.transfer(alice, bob, 10);
+        token.transfer(bob, 10);
 
         assertEq(token.balanceOf(bob), 10);
     }
@@ -64,6 +64,6 @@ contract ModularTokenTest is Test {
 
         vm.prank(alice);
         vm.expectRevert();
-        token.transfer(alice, bob, 1500);
+        token.transfer(bob, 1500);
     }
 }
